@@ -1,0 +1,60 @@
+basePath: /
+definitions:
+  handler.getLatestTodoItemResponse:
+    properties:
+      data:
+        $ref: '#/definitions/todo.TodoItem'
+      message:
+        type: string
+    type: object
+  handler.responseBag:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  todo.TodoItem:
+    properties:
+      description:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: integer
+    type: object
+host: localhost:3333
+info:
+  contact: {}
+  description: API Server for TodoItem Application
+  title: TodoItem App API
+  version: "1.0"
+paths:
+  /todo:
+    get:
+      consumes:
+      - application/json
+      description: get latest TodoItem object
+      operationId: todo-latest
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getLatestTodoItemResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.responseBag'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.responseBag'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.responseBag'
+      summary: Get latest TodoItem
+      tags:
+      - TodoItem
+swagger: "2.0"

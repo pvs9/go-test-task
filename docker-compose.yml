@@ -1,55 +1,65 @@
 version: '3.6'
 services:
-  test-task:
+  app: &app
     build:
       context: .
       dockerfile: docker/Dockerfile-dev
-    image: adjoe/golang-dev
-    ports:
-      - "3333:3000"
+    image: vpdev/golang-dev
     networks:
-      - adjoe
+      - app-network
     depends_on:
       - localstack
       - mysql
       - awscli
     volumes:
-      - ./:/go/src/adjoe.io
-    command: ["/bin/sh", "-c", "gin -t test-task/src run"]
+      - ./:/go/src/go-test-task.io
+
+  app:
+    <<: *app
+    ports:
+      - "3333:3000"
+    command: [ "/bin/sh", "-c", "go run cmd/main.go" ]
+
+  app-consumer:
+    <<: *app
+    environment:
+      APP_MODE: 'consumer'
+    command: [ "/bin/sh", "-c", "go run cmd/main.go" ]
+
 
   mysql:
-    image: mysql:8.0
+    image: mysql/mysql-server:8.0.23
     ports:
       - 3306:3306
     environment:
-      - MYSQL_DATABASE=adjoe
-      - MYSQL_USER=adjoe
-      - MYSQL_PASSWORD=adjoe
-      - MYSQL_ROOT_PASSWORD=adjoe
+      - MYSQL_DATABASE=app
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=app
+      - MYSQL_ROOT_PASSWORD=app
     networks:
-      - adjoe
+      - app-network
 
   localstack:
     image: localstack/localstack:latest
     user: root
     environment:
       - DATA_DIR=/tmp/localstack/data
-      - DEFAULT_REGION=eu-central-1
       - SERVICES=sqs
+      - HOSTNAME_EXTERNAL=localstack
     ports:
       - 4566:4566
     networks:
-      - adjoe
+      - app-network
 
   awscli:
     depends_on:
       - localstack
-    image: adjoe-test/awscli
-    command: 'sqs create-queue --queue-name my-queue --endpoint-url="http://localstack:4566"'
+    image: vpdev/awscli
+    command: 'sqs create-queue --queue-name my-queue --endpoint-url="http://localstack:4566" --region=eu-central-1'
     networks:
-      - adjoe
+      - app-network
 
 networks:
-  adjoe:
-    name: adjoe-test
+  app-network:
+    name: app-network-test
     driver: bridge

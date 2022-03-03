@@ -1,11 +1,6 @@
-FROM adjoe-test/golang-base
+FROM vpdev/golang-base
 
 ENV GO111MODULE=on
-
-RUN go install github.com/codegangsta/gin@latest && \
-    go install github.com/onsi/ginkgo/ginkgo@latest && \
-    go install github.com/go-delve/delve/cmd/dlv@latest && \
-    go install github.com/onsi/gomega/...@latest
 
 # Set the local PORT environment variable inside the container
 ENV PORT 3000
