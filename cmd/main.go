@@ -52,8 +52,6 @@ func main() {
 	default:
 		initApp()
 	}
-
-	initApp()
 }
 
 func initApp() {
