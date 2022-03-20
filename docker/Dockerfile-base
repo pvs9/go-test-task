@@ -1,5 +1,5 @@
 FROM golang:1.17
 
-RUN mkdir -p /go/src/adjoe.io
+RUN mkdir -p /go/src/go-test-task.io
 
 WORKDIR /go/src/go-test-task.io
