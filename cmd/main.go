@@ -49,7 +49,6 @@ func main() {
 	case "consumer":
 		initConsumer()
 	case "app":
-	default:
 		initApp()
 	}
 }

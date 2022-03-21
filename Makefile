@@ -23,7 +23,7 @@ rest:
 	@make logs
 
 bash:
-	docker-compose exec test-task bash
+	docker-compose exec app bash
 
 aws-cli:
 	docker run --network=app-network-test  vpdev/awscli --endpoint-url="http://localstack:4566" $(filter-out $@,$(MAKECMDGOALS))
